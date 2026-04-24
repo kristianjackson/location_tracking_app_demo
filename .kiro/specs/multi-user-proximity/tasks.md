@@ -114,14 +114,14 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - Maintain `nearbyMarkers` Map (sessionId → marker) and remove all markers on disconnect
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 5.1, 5.4, 5.5, 5.6_
 
-  - [~] 4.2 Write property test: LocationBroadcast structure matches visibility state
+  - [x] 4.2 Write property test: LocationBroadcast structure matches visibility state
     - **Property 3: LocationBroadcast structure matches visibility state**
     - Generate random session data, coordinates, and visibility booleans
     - Verify message always includes `type`, `sessionId`, `displayName`, `visible`, `timestamp`
     - Verify `lat`, `lng`, `accuracy` present iff `visible` is true
     - **Validates: Requirements 2.3, 2.4, 3.2, 3.3, 3.4, 7.4**
 
-  - [~] 4.3 Write property test: Visibility preference round-trip
+  - [-] 4.3 Write property test: Visibility preference round-trip
     - **Property 4: Visibility preference round-trip**
     - Generate random boolean values
     - Verify `setVisibility` then `getVisibility` returns the original value

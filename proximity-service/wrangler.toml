@@ -1,0 +1,12 @@
+name = "proximity-service"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+
+[durable_objects]
+bindings = [
+  { name = "PROXIMITY_ROOM", class_name = "ProximityRoom" }
+]
+
+[[migrations]]
+tag = "v1"
+new_classes = ["ProximityRoom"]

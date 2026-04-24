@@ -38,12 +38,12 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - _Requirements: 1.1, 1.3, 1.5_
 
 - [ ] 2. Implement server-side pure functions and Durable Object
-  - [-] 2.1 Scaffold the proximity service Worker project
+  - [x] 2.1 Scaffold the proximity service Worker project
     - Create `proximity-service/` directory with `src/index.js`, `src/proximity-room.js`, `wrangler.toml`, and `package.json`
     - Configure `wrangler.toml` with the Durable Object binding for `ProximityRoom`
     - _Requirements: 4.1, 4.7_
 
-  - [~] 2.2 Implement `haversineDistance` pure function in `proximity-room.js`
+  - [-] 2.2 Implement `haversineDistance` pure function in `proximity-room.js`
     - Implement `haversineDistance(lat1, lon1, lat2, lon2)` returning distance in meters
     - Use Earth radius R = 6,371,000 meters
     - Export the function for direct unit testing

@@ -100,7 +100,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
 - [x] 3. Checkpoint
   - Ensure all server-side tests pass, ask the user if questions arise.
 
-- [ ] 4. Implement client-side proximity modules
+- [x] 4. Implement client-side proximity modules
   - [x] 4.1 Implement `proximity.js` — WebSocket client and marker management
     - Create `proximity.js` at the project root
     - Implement `initProximity(map, sessionId, displayName)` to establish WSS connection
@@ -155,11 +155,11 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - Test all nearby markers removed on disconnect
     - _Requirements: 3.1, 3.2, 3.3, 3.5, 3.6, 5.1, 5.4, 5.5_
 
-- [~] 5. Checkpoint
+- [x] 5. Checkpoint
   - Ensure all client-side proximity tests pass, ask the user if questions arise.
 
 - [ ] 6. Add nearby user marker functions to `map.js`
-  - [~] 6.1 Implement `addNearbyUserMarker`, `updateNearbyUserMarker`, `removeNearbyUserMarker` in `map.js`
+  - [-] 6.1 Implement `addNearbyUserMarker`, `updateNearbyUserMarker`, `removeNearbyUserMarker` in `map.js`
     - `addNearbyUserMarker(map, lat, lng, displayName)` — create green (#34A853) CircleMarker with radius 8, bind tooltip with display name, add to map, return marker
     - `updateNearbyUserMarker(marker, lat, lng)` — call `setLatLng` on existing marker
     - `removeNearbyUserMarker(marker)` — remove marker from map

@@ -39,7 +39,7 @@ Build a lightweight, single-page web application that displays the user's real-t
     - Test that `showSignalLost` and `hideSignalLost` toggle the notification
     - _Requirements: 1.3, 1.4, 3.4, 6.1_
 
-- [-] 3. Implement geolocation wrapper module (`geolocation.js`)
+- [x] 3. Implement geolocation wrapper module (`geolocation.js`)
   - [x] 3.1 Create `geolocation.js` with Geolocation API wrapper functions
     - Define `GEO_OPTIONS_INITIAL` with `enableHighAccuracy: true`, `timeout: 10000`, `maximumAge: 0`
     - Define `GEO_OPTIONS_WATCH` with `enableHighAccuracy: true`, `timeout: 15000`, `maximumAge: 0`
@@ -49,7 +49,7 @@ Build a lightweight, single-page web application that displays the user's real-t
     - Implement `getErrorMessage(error)` mapping error codes 1, 2, 3 to user-facing messages
     - Export all functions as ES module exports
     - _Requirements: 1.1, 1.2, 1.3, 1.4, 3.1_
-  - [ ] 3.2 Write unit tests for `geolocation.js`
+  - [x] 3.2 Write unit tests for `geolocation.js`
     - Test `getErrorMessage` returns correct message for each error code (1=permission denied, 2=position unavailable, 3=timeout)
     - Test `getCurrentPosition` resolves with position data when API succeeds
     - Test `getCurrentPosition` rejects with error when API fails

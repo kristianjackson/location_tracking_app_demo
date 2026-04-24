@@ -56,7 +56,7 @@ Build a lightweight, single-page web application that displays the user's real-t
     - Test `watchPosition` calls the browser API with correct options
     - _Requirements: 1.3, 1.4_
 
-- [ ] 4. Checkpoint - Ensure all tests pass
+- [x] 4. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 5. Implement map view module (`map.js`)

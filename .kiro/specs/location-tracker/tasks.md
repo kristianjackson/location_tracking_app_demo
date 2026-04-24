@@ -138,7 +138,7 @@ Build a lightweight, single-page web application that displays the user's real-t
     - Confirm real-time updates move the marker
     - Confirm signal-lost notification appears after 30s without updates
     - _Requirements: 1.1, 1.2, 2.1, 2.2, 3.1, 3.2, 3.4, 4.1, 6.1, 6.3_
-  - [~] 8.2 Write integration tests for the full application flow
+  - [x] 8.2 Write integration tests for the full application flow
     - Test initialization flow: loading → permission → map render
     - Test permission denied flow: loading → error message
     - Test real-time update flow: marker and accuracy circle update on new position

@@ -78,7 +78,7 @@ Build a lightweight, single-page web application that displays the user's real-t
     - Test `updateAccuracyCircle` updates circle position and radius
     - _Requirements: 2.2, 4.1, 4.2_
 
-- [ ] 6. Implement application core (`app.js`)
+- [x] 6. Implement application core (`app.js`)
   - [x] 6.1 Create `app.js` with application state and initialization logic
     - Define application state object: `map`, `marker`, `accuracyCircle`, `watchId`, `userHasPanned`, `signalLostTimerId`, `isInitialized`
     - Define constants: `SIGNAL_LOST_TIMEOUT_MS = 30000`
@@ -125,7 +125,7 @@ Build a lightweight, single-page web application that displays the user's real-t
     - Test `resetSignalLostTimer` shows signal-lost notification after 30 seconds of no updates
     - _Requirements: 1.3, 1.4, 2.1, 3.2, 3.3, 3.4, 6.1_
 
-- [~] 7. Checkpoint - Ensure all tests pass
+- [x] 7. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 8. Wire everything together and finalize

@@ -147,7 +147,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - Verify the corresponding marker's tooltip content contains the display name string
     - **Validates: Requirements 5.3**
 
-  - [~] 4.7 Write unit tests for proximity client
+  - [x] 4.7 Write unit tests for proximity client
     - Test WebSocket connection lifecycle (connect, disconnect, reconnect)
     - Test message sending when visible vs hidden
     - Test marker creation/update/removal for specific scenarios

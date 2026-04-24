@@ -101,7 +101,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
   - Ensure all server-side tests pass, ask the user if questions arise.
 
 - [ ] 4. Implement client-side proximity modules
-  - [~] 4.1 Implement `proximity.js` — WebSocket client and marker management
+  - [x] 4.1 Implement `proximity.js` — WebSocket client and marker management
     - Create `proximity.js` at the project root
     - Implement `initProximity(map, sessionId, displayName)` to establish WSS connection
     - Implement `sendLocationUpdate(lat, lng, accuracy)` to construct and send LocationBroadcast JSON

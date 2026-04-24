@@ -134,7 +134,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - Verify delay equals `min(1000 * 2^attempt, 30000)` and is within [1000, 30000]
     - **Validates: Requirements 3.5**
 
-  - [~] 4.5 Write property test: Marker set matches presence update
+  - [x] 4.5 Write property test: Marker set matches presence update
     - **Property 9: Marker set matches presence update**
     - Generate random PresenceUpdate payloads with N users
     - Verify exactly N markers exist after processing, positioned at correct coordinates

@@ -128,7 +128,7 @@ Build a lightweight, single-page web application that displays the user's real-t
 - [x] 7. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 8. Wire everything together and finalize
+- [x] 8. Wire everything together and finalize
   - [x] 8.1 Integrate all modules in `index.html` and verify end-to-end flow
     - Ensure `index.html` correctly loads `app.js` as module entry point
     - Verify module imports chain: `app.js` → `map.js`, `geolocation.js`, `ui.js`
@@ -146,7 +146,7 @@ Build a lightweight, single-page web application that displays the user's real-t
     - Test signal-lost: notification appears after 30s timeout
     - _Requirements: 1.1, 1.2, 1.3, 2.1, 3.1, 3.3, 3.4_
 
-- [~] 9. Final checkpoint - Ensure all tests pass
+- [x] 9. Final checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Notes

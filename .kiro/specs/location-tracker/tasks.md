@@ -22,7 +22,7 @@ Build a lightweight, single-page web application that displays the user's real-t
     - Style loading indicator, error message, and signal-lost notification elements
     - _Requirements: 5.1, 5.2, 5.3_
 
-- [-] 2. Implement UI overlay module (`ui.js`)
+- [x] 2. Implement UI overlay module (`ui.js`)
   - [x] 2.1 Create `ui.js` with functions for loading, error, and signal-lost states
     - Implement `showLoading(message)` to display loading indicator with provided text
     - Implement `hideLoading()` to remove loading indicator

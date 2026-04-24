@@ -1,6 +1,6 @@
 // ProximityRoom Durable Object and pure helper functions.
-// Pure functions are implemented in tasks 2.2, 2.4, 2.6.
-// Durable Object class is implemented in task 2.8.
+
+import { DurableObject } from "cloudflare:workers";
 
 export const PROXIMITY_RADIUS_M = 5000;
 export const BROADCAST_INTERVAL_MS = 3000;
@@ -79,15 +79,136 @@ export function filterNearbyUsers(users, clientSessionId, clientLat, clientLng, 
  * ProximityRoom Durable Object class.
  * Manages connected users, WebSocket communication, and periodic presence broadcasts.
  */
-export class ProximityRoom {
+export class ProximityRoom extends DurableObject {
   constructor(ctx, env) {
-    this.ctx = ctx;
-    this.env = env;
+    super(ctx, env);
     this.users = new Map();
   }
 
+  /**
+   * Handle incoming HTTP requests. Expects a WebSocket upgrade request
+   * with sessionId provided as a query parameter.
+   */
   async fetch(request) {
-    // TODO: Implement WebSocket upgrade and Hibernation API handling in task 2.8
-    return new Response('Not implemented', { status: 501 });
+    const upgradeHeader = request.headers.get('Upgrade');
+    if (!upgradeHeader || upgradeHeader.toLowerCase() !== 'websocket') {
+      return new Response('Expected WebSocket upgrade', { status: 426 });
+    }
+
+    const url = new URL(request.url);
+    const sessionId = url.searchParams.get('sessionId');
+    if (!sessionId) {
+      return new Response('Missing sessionId', { status: 400 });
+    }
+
+    // Create the WebSocket pair
+    const pair = new WebSocketPair();
+    const [client, server] = Object.values(pair);
+
+    // Accept the server-side WebSocket using the Hibernation API, tagged with sessionId
+    this.ctx.acceptWebSocket(server, [sessionId]);
+
+    // Schedule the alarm for periodic broadcasts if not already set
+    const currentAlarm = await this.ctx.storage.getAlarm();
+    if (currentAlarm === null) {
+      await this.ctx.storage.setAlarm(Date.now() + BROADCAST_INTERVAL_MS);
+    }
+
+    return new Response(null, { status: 101, webSocket: client });
+  }
+
+  /**
+   * Handle incoming WebSocket messages (Hibernation API callback).
+   * Parses LocationBroadcast JSON and updates the user entry.
+   */
+  async webSocketMessage(ws, message) {
+    let data;
+    try {
+      data = JSON.parse(message);
+    } catch {
+      // Invalid JSON — ignore per error handling spec
+      return;
+    }
+
+    const tags = this.ctx.getTags(ws);
+    const sessionId = tags.length > 0 ? tags[0] : null;
+    if (!sessionId) return;
+
+    // Update or create the user entry
+    this.users.set(sessionId, {
+      sessionId,
+      displayName: data.displayName || '',
+      lat: data.lat,
+      lng: data.lng,
+      accuracy: data.accuracy,
+      visible: Boolean(data.visible),
+      lastSeen: Date.now(),
+      ws,
+    });
+  }
+
+  /**
+   * Handle WebSocket close (Hibernation API callback).
+   * Removes the user from the in-memory map.
+   */
+  async webSocketClose(ws, code, reason, wasClean) {
+    const tags = this.ctx.getTags(ws);
+    const sessionId = tags.length > 0 ? tags[0] : null;
+    if (sessionId) {
+      this.users.delete(sessionId);
+    }
+  }
+
+  /**
+   * Handle WebSocket error (Hibernation API callback).
+   * Removes the user from the in-memory map.
+   */
+  async webSocketError(ws, error) {
+    const tags = this.ctx.getTags(ws);
+    const sessionId = tags.length > 0 ? tags[0] : null;
+    if (sessionId) {
+      this.users.delete(sessionId);
+    }
+  }
+
+  /**
+   * Alarm handler — fires periodically to broadcast presence updates.
+   * Evicts stale users, computes per-client nearby sets, sends PresenceUpdate
+   * JSON to each connected client, and reschedules the alarm.
+   */
+  async alarm() {
+    // Evict stale users
+    evictStaleUsers(this.users, Date.now(), STALE_TIMEOUT_MS);
+
+    // For each connected user, compute their nearby set and send a PresenceUpdate
+    for (const [sessionId, user] of this.users) {
+      // Skip users without valid coordinates
+      if (user.lat == null || user.lng == null) continue;
+
+      const nearbyUsers = filterNearbyUsers(
+        this.users,
+        sessionId,
+        user.lat,
+        user.lng,
+        PROXIMITY_RADIUS_M
+      );
+
+      const presenceUpdate = {
+        type: 'presence',
+        users: nearbyUsers,
+      };
+
+      try {
+        user.ws.send(JSON.stringify(presenceUpdate));
+      } catch {
+        // If sending fails, remove the user
+        this.users.delete(sessionId);
+      }
+    }
+
+    // Reschedule alarm if there are still connected users
+    if (this.users.size > 0) {
+      await this.ctx.storage.setAlarm(Date.now() + BROADCAST_INTERVAL_MS);
+    }
   }
 }

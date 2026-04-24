@@ -79,7 +79,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - Verify filtering correctness: visible AND within 5000m AND not self
     - **Validates: Requirements 2.4, 4.4, 5.6**
 
-  - [~] 2.8 Implement the `ProximityRoom` Durable Object class
+  - [x] 2.8 Implement the `ProximityRoom` Durable Object class
     - Implement constructor with `this.users = new Map()`
     - Implement `fetch()` to handle WebSocket upgrade using Hibernation API (`this.ctx.acceptWebSocket`)
     - Tag WebSocket with sessionId for retrieval

@@ -67,7 +67,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - Verify a user is evicted iff `(currentTime - lastSeen) > 60000`
     - **Validates: Requirements 4.5**
 
-  - [~] 2.6 Implement presence filtering logic as a pure function
+  - [x] 2.6 Implement presence filtering logic as a pure function
     - Create an exported `filterNearbyUsers(users, clientSessionId, clientLat, clientLng, radiusM)` function
     - Include a user only if visible, within radius (Haversine), and not the requesting client
     - Return array of `{sessionId, displayName, lat, lng}`

@@ -60,7 +60,19 @@ export function evictStaleUsers(users, now, staleTimeoutMs) {
  * @returns {Array<{sessionId: string, displayName: string, lat: number, lng: number}>}
  */
 export function filterNearbyUsers(users, clientSessionId, clientLat, clientLng, radiusM) {
-  // TODO: Implement in task 2.6
+  const result = [];
+  for (const [sessionId, user] of users) {
+    if (sessionId === clientSessionId) continue;
+    if (!user.visible) continue;
+    if (haversineDistance(clientLat, clientLng, user.lat, user.lng) > radiusM) continue;
+    result.push({
+      sessionId,
+      displayName: user.displayName,
+      lat: user.lat,
+      lng: user.lng,
+    });
+  }
+  return result;
 }
 
 /**

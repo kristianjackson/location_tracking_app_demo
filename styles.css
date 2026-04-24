@@ -133,6 +133,39 @@ html, body {
     font-size: 14px;
     padding: 12px 24px;
   }
+
+  /* Proximity responsive adjustments */
+  .proximity-name-dialog {
+    padding: 32px;
+    max-width: 400px;
+  }
+
+  .proximity-name-title {
+    font-size: 20px;
+  }
+
+  .proximity-name-description {
+    font-size: 14px;
+  }
+
+  .proximity-privacy-dialog {
+    padding: 32px;
+    max-width: 440px;
+  }
+
+  .proximity-privacy-title {
+    font-size: 20px;
+  }
+
+  .proximity-connection-status {
+    font-size: 13px;
+    padding: 5px 12px;
+  }
+
+  .proximity-nearby-count {
+    font-size: 14px;
+    padding: 5px 12px;
+  }
 }
 
 /* Proximity UI containers — positioned over the map */
@@ -161,4 +194,261 @@ html, body {
   left: 16px;
   z-index: 1000;
   pointer-events: auto;
+}
+
+/* ===== Proximity UI Styles ===== */
+
+/* --- Display Name Prompt Modal --- */
+.proximity-name-prompt {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.proximity-name-dialog {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  width: 90%;
+  max-width: 360px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+}
+
+.proximity-name-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.proximity-name-description {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+.proximity-name-input {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.proximity-name-input:focus {
+  border-color: #4285F4;
+  box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+}
+
+.proximity-name-feedback {
+  font-size: 13px;
+  color: #666;
+  min-height: 20px;
+  margin-top: 8px;
+  margin-bottom: 12px;
+}
+
+.proximity-name-feedback-error {
+  color: #d32f2f;
+}
+
+.proximity-name-submit {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  background: #4285F4;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  min-height: 44px;
+  transition: background 0.2s;
+}
+
+.proximity-name-submit:hover {
+  background: #3367d6;
+}
+
+.proximity-name-submit:active {
+  background: #2a56c6;
+}
+
+/* --- Visibility Toggle --- */
+.proximity-visibility-toggle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.proximity-toggle-visible {
+  background: #34A853;
+  color: #fff;
+}
+
+.proximity-toggle-visible:hover {
+  background: #2d9249;
+  box-shadow: 0 2px 12px rgba(52, 168, 83, 0.4);
+}
+
+.proximity-toggle-hidden {
+  background: #9e9e9e;
+  color: #fff;
+}
+
+.proximity-toggle-hidden:hover {
+  background: #757575;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* --- Connection Status Indicator --- */
+.proximity-connection-status {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.85);
+  color: #555;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+}
+
+.proximity-status-connecting {
+  color: #f9a825;
+}
+
+.proximity-status-connected {
+  color: #34A853;
+}
+
+.proximity-status-reconnecting {
+  color: #f57c00;
+}
+
+.proximity-status-disconnected {
+  color: #d32f2f;
+}
+
+/* --- Nearby Count Badge --- */
+.proximity-nearby-count {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #34A853;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+}
+
+/* --- Privacy Notice Modal --- */
+.proximity-privacy-notice {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.proximity-privacy-dialog {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+}
+
+.proximity-privacy-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.proximity-privacy-content {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.6;
+}
+
+.proximity-privacy-content p {
+  margin-bottom: 10px;
+}
+
+.proximity-privacy-content p:last-child {
+  margin-bottom: 16px;
+}
+
+.proximity-privacy-dismiss {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  background: #4285F4;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  min-height: 44px;
+  transition: background 0.2s;
+}
+
+.proximity-privacy-dismiss:hover {
+  background: #3367d6;
+}
+
+.proximity-privacy-dismiss:active {
+  background: #2a56c6;
+}
+
+/* --- Settings Button --- */
+.proximity-settings-button {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  font-size: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #555;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: background 0.2s, color 0.2s;
+}
+
+.proximity-settings-button:hover {
+  background: #fff;
+  color: #333;
+}
+
+.proximity-settings-button:active {
+  background: #f0f0f0;
 }

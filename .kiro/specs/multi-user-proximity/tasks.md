@@ -193,14 +193,14 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - _Requirements: 1.2, 1.4, 2.1, 2.2, 2.7, 6.1, 6.2, 6.3, 6.4_
 
 - [ ] 8. Update `index.html` and `styles.css` for proximity UI
-  - [-] 8.1 Add proximity UI containers to `index.html`
+  - [x] 8.1 Add proximity UI containers to `index.html`
     - Add container for visibility toggle (positioned on map, e.g., top-right)
     - Add container for connection status indicator
     - Add container for nearby user count badge
     - Ensure containers do not obstruct the map or existing overlay
     - _Requirements: 2.1, 6.1, 6.2, 6.3, 6.4, 6.5_
 
-  - [~] 8.2 Add proximity styles to `styles.css`
+  - [-] 8.2 Add proximity styles to `styles.css`
     - Style the visibility toggle with distinct visible/hidden states
     - Style the connection status indicator (subtle, non-obstructive)
     - Style the nearby count badge

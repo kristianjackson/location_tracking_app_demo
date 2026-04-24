@@ -134,3 +134,31 @@ html, body {
     padding: 12px 24px;
   }
 }
+
+/* Proximity UI containers — positioned over the map */
+#proximity-controls {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+#proximity-status {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  z-index: 1000;
+  pointer-events: auto;
+}
+
+#proximity-count {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 1000;
+  pointer-events: auto;
+}

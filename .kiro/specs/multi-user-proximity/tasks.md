@@ -172,7 +172,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - Test marker position update
     - _Requirements: 5.2, 5.3_
 
-- [ ] 7. Implement proximity UI module (`proximity-ui.js`)
+- [x] 7. Implement proximity UI module (`proximity-ui.js`)
   - [x] 7.1 Implement `proximity-ui.js` with all UI components
     - Create `proximity-ui.js` at the project root
     - Implement `showDisplayNamePrompt(onSubmit)` — modal overlay with input field, validation feedback, and submit button
@@ -184,7 +184,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - Implement `createSettingsButton(container, onChangeName)` — settings gear for name change
     - _Requirements: 1.2, 1.4, 1.6, 2.1, 2.2, 2.7, 6.1, 6.2, 6.3, 6.4, 6.5, 7.5_
 
-  - [-] 7.2 Write unit tests for proximity UI module
+  - [x] 7.2 Write unit tests for proximity UI module
     - Test display name prompt appears and validates input
     - Test visibility toggle renders with correct initial state (hidden)
     - Test connection status indicator shows correct text for each state
@@ -193,7 +193,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - _Requirements: 1.2, 1.4, 2.1, 2.2, 2.7, 6.1, 6.2, 6.3, 6.4_
 
 - [ ] 8. Update `index.html` and `styles.css` for proximity UI
-  - [~] 8.1 Add proximity UI containers to `index.html`
+  - [-] 8.1 Add proximity UI containers to `index.html`
     - Add container for visibility toggle (positioned on map, e.g., top-right)
     - Add container for connection status indicator
     - Add container for nearby user count badge

@@ -1,0 +1,136 @@
+/* Reset */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Map container — full viewport */
+#map {
+  width: 100vw;
+  height: 100vh;
+  touch-action: none; /* Prevent browser gestures conflicting with Leaflet */
+}
+
+/* Overlay — absolutely positioned over the map, centered content */
+#overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+#overlay:empty {
+  display: none;
+}
+
+/* Loading indicator */
+.loading-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 32px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  pointer-events: auto;
+}
+
+.loading-indicator .spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e0e0e0;
+  border-top-color: #4285F4;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-indicator .loading-text {
+  font-size: 14px;
+  color: #333;
+}
+
+/* Error message */
+.error-message {
+  max-width: 320px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  pointer-events: auto;
+}
+
+.error-message .error-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.error-message .error-text {
+  font-size: 14px;
+  color: #d32f2f;
+  line-height: 1.5;
+}
+
+/* Signal-lost notification */
+.signal-lost {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  background: rgba(255, 152, 0, 0.95);
+  color: #fff;
+  border-radius: 8px;
+  font-size: 13px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  pointer-events: auto;
+}
+
+/* Media queries for wider screens */
+@media (min-width: 768px) {
+  .loading-indicator {
+    padding: 32px 48px;
+  }
+
+  .loading-indicator .spinner {
+    width: 40px;
+    height: 40px;
+  }
+
+  .loading-indicator .loading-text {
+    font-size: 16px;
+  }
+
+  .error-message {
+    max-width: 400px;
+    padding: 32px;
+  }
+
+  .error-message .error-text {
+    font-size: 16px;
+  }
+
+  .signal-lost {
+    font-size: 14px;
+    padding: 12px 24px;
+  }
+}

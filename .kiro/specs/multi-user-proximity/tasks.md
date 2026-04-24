@@ -159,7 +159,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
   - Ensure all client-side proximity tests pass, ask the user if questions arise.
 
 - [ ] 6. Add nearby user marker functions to `map.js`
-  - [-] 6.1 Implement `addNearbyUserMarker`, `updateNearbyUserMarker`, `removeNearbyUserMarker` in `map.js`
+  - [x] 6.1 Implement `addNearbyUserMarker`, `updateNearbyUserMarker`, `removeNearbyUserMarker` in `map.js`
     - `addNearbyUserMarker(map, lat, lng, displayName)` — create green (#34A853) CircleMarker with radius 8, bind tooltip with display name, add to map, return marker
     - `updateNearbyUserMarker(marker, lat, lng)` — call `setLatLng` on existing marker
     - `removeNearbyUserMarker(marker)` — remove marker from map

@@ -16,6 +16,9 @@ const ACCURACY_CIRCLE_COLOR = '#4285F4';
 /** Accuracy circle fill opacity. */
 const ACCURACY_CIRCLE_OPACITY = 0.15;
 
+/** Nearby user marker color (green). */
+const NEARBY_MARKER_COLOR = '#34A853';
+
 /** Default zoom level (~500m radius neighborhood view). */
 const INITIAL_ZOOM = 16;
 
@@ -107,4 +110,42 @@ export function updateAccuracyCircle(circle, lat, lng, radiusMeters) {
  */
 export function onUserPan(map, callback) {
   map.on('dragend', callback);
+}
+
+/**
+ * Add a nearby user marker (green CircleMarker) to the map with a tooltip.
+ * @param {L.Map} map - The Leaflet map instance.
+ * @param {number} lat - Latitude.
+ * @param {number} lng - Longitude.
+ * @param {string} displayName - The nearby user's display name.
+ * @returns {L.CircleMarker} The created CircleMarker.
+ */
+export function addNearbyUserMarker(map, lat, lng, displayName) {
+  const marker = L.circleMarker([lat, lng], {
+    radius: MARKER_RADIUS,
+    color: NEARBY_MARKER_COLOR,
+    fillColor: NEARBY_MARKER_COLOR,
+    fillOpacity: 1,
+  });
+  marker.bindTooltip(displayName);
+  marker.addTo(map);
+  return marker;
+}
+
+/**
+ * Move an existing nearby user marker to new coordinates.
+ * @param {L.CircleMarker} marker - The CircleMarker to update.
+ * @param {number} lat - New latitude.
+ * @param {number} lng - New longitude.
+ */
+export function updateNearbyUserMarker(marker, lat, lng) {
+  marker.setLatLng([lat, lng]);
+}
+
+/**
+ * Remove a nearby user marker from the map.
+ * @param {L.CircleMarker} marker - The CircleMarker to remove.
+ */
+export function removeNearbyUserMarker(marker) {
+  marker.remove();
 }

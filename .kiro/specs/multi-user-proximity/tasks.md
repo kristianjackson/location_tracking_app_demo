@@ -55,7 +55,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - Verify non-negative, symmetric, zero-for-identical, and triangle inequality
     - **Validates: Requirements 4.6**
 
-  - [~] 2.4 Implement stale client eviction logic as a pure function
+  - [x] 2.4 Implement stale client eviction logic as a pure function
     - Create an exported `evictStaleUsers(users, now, staleTimeoutMs)` function in `proximity-room.js`
     - Remove users where `(now - user.lastSeen) > staleTimeoutMs`
     - Return the list of evicted session IDs

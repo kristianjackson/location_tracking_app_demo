@@ -40,7 +40,14 @@ export function haversineDistance(lat1, lon1, lat2, lon2) {
  * @returns {string[]} Array of evicted session IDs
  */
 export function evictStaleUsers(users, now, staleTimeoutMs) {
-  // TODO: Implement in task 2.4
+  const evicted = [];
+  for (const [sessionId, user] of users) {
+    if ((now - user.lastSeen) > staleTimeoutMs) {
+      users.delete(sessionId);
+      evicted.push(sessionId);
+    }
+  }
+  return evicted;
 }
 
 /**

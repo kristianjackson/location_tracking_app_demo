@@ -6,7 +6,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
 
 ## Tasks
 
-- [-] 1. Create the session module (`session.js`)
+- [x] 1. Create the session module (`session.js`)
   - [x] 1.1 Implement `session.js` with UUID generation, display name validation, and localStorage persistence
     - Create `session.js` at the project root
     - Implement `getSessionId()` — generate UUID v4 if not in localStorage, otherwise return stored value

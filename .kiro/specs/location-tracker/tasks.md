@@ -79,7 +79,7 @@ Build a lightweight, single-page web application that displays the user's real-t
     - _Requirements: 2.2, 4.1, 4.2_
 
 - [ ] 6. Implement application core (`app.js`)
-  - [ ] 6.1 Create `app.js` with application state and initialization logic
+  - [x] 6.1 Create `app.js` with application state and initialization logic
     - Define application state object: `map`, `marker`, `accuracyCircle`, `watchId`, `userHasPanned`, `signalLostTimerId`, `isInitialized`
     - Define constants: `SIGNAL_LOST_TIMEOUT_MS = 30000`
     - Implement `init()` function called on `DOMContentLoaded`:
@@ -88,7 +88,7 @@ Build a lightweight, single-page web application that displays the user's real-t
       - On success: call `handlePositionSuccess`
       - On error: call `handlePositionError`
     - _Requirements: 1.1, 1.2, 6.1_
-  - [ ] 6.2 Implement position success handler and real-time tracking
+  - [~] 6.2 Implement position success handler and real-time tracking
     - Implement `handlePositionSuccess(pos)`:
       - Initialize map centered on received coordinates at zoom level 16
       - Add position marker and accuracy circle
@@ -103,7 +103,7 @@ Build a lightweight, single-page web application that displays the user's real-t
       - Re-center map if `userHasPanned` is false
       - Call `resetSignalLostTimer()`
     - _Requirements: 2.1, 2.2, 2.3, 3.1, 3.2, 3.3, 4.1, 4.2, 6.3_
-  - [ ] 6.3 Implement error handling and signal-lost timer
+  - [~] 6.3 Implement error handling and signal-lost timer
     - Implement `handlePositionError(err)`:
       - Hide loading indicator
       - Get user-facing message from `getErrorMessage`
@@ -116,7 +116,7 @@ Build a lightweight, single-page web application that displays the user's real-t
       - Clear geolocation watch
       - Clear signal-lost timer
     - _Requirements: 1.3, 1.4, 3.4_
-  - [ ] 6.4 Write unit tests for `app.js`
+  - [~] 6.4 Write unit tests for `app.js`
     - Test `init` shows loading indicator and requests position
     - Test `handlePositionSuccess` initializes map, adds marker, hides loading, starts watching
     - Test `handlePositionError` shows correct error message for each error code
@@ -125,11 +125,11 @@ Build a lightweight, single-page web application that displays the user's real-t
     - Test `resetSignalLostTimer` shows signal-lost notification after 30 seconds of no updates
     - _Requirements: 1.3, 1.4, 2.1, 3.2, 3.3, 3.4, 6.1_
 
-- [ ] 7. Checkpoint - Ensure all tests pass
+- [~] 7. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 8. Wire everything together and finalize
-  - [ ] 8.1 Integrate all modules in `index.html` and verify end-to-end flow
+  - [~] 8.1 Integrate all modules in `index.html` and verify end-to-end flow
     - Ensure `index.html` correctly loads `app.js` as module entry point
     - Verify module imports chain: `app.js` → `map.js`, `geolocation.js`, `ui.js`
     - Confirm loading indicator appears on page load
@@ -138,7 +138,7 @@ Build a lightweight, single-page web application that displays the user's real-t
     - Confirm real-time updates move the marker
     - Confirm signal-lost notification appears after 30s without updates
     - _Requirements: 1.1, 1.2, 2.1, 2.2, 3.1, 3.2, 3.4, 4.1, 6.1, 6.3_
-  - [ ] 8.2 Write integration tests for the full application flow
+  - [~] 8.2 Write integration tests for the full application flow
     - Test initialization flow: loading → permission → map render
     - Test permission denied flow: loading → error message
     - Test real-time update flow: marker and accuracy circle update on new position
@@ -146,7 +146,7 @@ Build a lightweight, single-page web application that displays the user's real-t
     - Test signal-lost: notification appears after 30s timeout
     - _Requirements: 1.1, 1.2, 1.3, 2.1, 3.1, 3.3, 3.4_
 
-- [ ] 9. Final checkpoint - Ensure all tests pass
+- [~] 9. Final checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Notes

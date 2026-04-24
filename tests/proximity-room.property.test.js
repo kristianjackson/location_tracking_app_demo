@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import fc from 'fast-check';
-import { haversineDistance, evictStaleUsers } from '../proximity-service/src/proximity-room.js';
+import { haversineDistance, evictStaleUsers, filterNearbyUsers } from '../proximity-service/src/proximity-room.js';
 
 // Arbitrary for valid latitude [-90, 90]
 const latArb = fc.double({ min: -90, max: 90, noNaN: true, noDefaultInfinity: true });
@@ -159,6 +159,122 @@ describe('Feature: multi-user-proximity, Property 7: Stale client eviction', () 
 
         // Map size is correct
         expect(usersMap.size).toBe(originalSize - expectedEvicted.length);
+      }),
+      { numRuns: 100, verbose: true, endOnFailure: true }
+    );
+  });
+});
+
+
+/**
+ * Feature: multi-user-proximity, Property 6: Presence update includes only visible users within radius
+ *
+ * **Validates: Requirements 2.4, 4.4, 5.6**
+ *
+ * For any set of users with random positions and visibility states, and for any
+ * requesting client position, the generated Presence Update SHALL include a user
+ * if and only if:
+ * (a) the user's visibility is set to visible, AND
+ * (b) the Haversine distance between the user and the requesting client is ≤ 5000 meters, AND
+ * (c) the user is not the requesting client itself.
+ */
+describe('Feature: multi-user-proximity, Property 6: Presence update includes only visible users within radius', () => {
+  const RADIUS_M = 5000;
+
+  // Arbitrary for valid latitude [-90, 90]
+  const latArb = fc.double({ min: -90, max: 90, noNaN: true, noDefaultInfinity: true });
+
+  // Arbitrary for valid longitude [-180, 180]
+  const lngArb = fc.double({ min: -180, max: 180, noNaN: true, noDefaultInfinity: true });
+
+  // Arbitrary for a display name (2–20 alphanumeric/space/hyphen/underscore chars)
+  const allowedChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 _-';
+  const displayNameArb = fc
+    .array(fc.constantFrom(...allowedChars.split('')), { minLength: 2, maxLength: 20 })
+    .map((chars) => chars.join(''));
+
+  // Arbitrary for a single user entry
+  const userEntryArb = fc.record({
+    sessionId: fc.uuid(),
+    displayName: displayNameArb,
+    lat: latArb,
+    lng: lngArb,
+    visible: fc.boolean(),
+    lastSeen: fc.integer({ min: 0, max: Number.MAX_SAFE_INTEGER }),
+  });
+
+  // Arbitrary for a set of users with unique session IDs, a client session ID, and client position
+  const scenarioArb = fc
+    .record({
+      users: fc.array(userEntryArb, { minLength: 0, maxLength: 15 }),
+      clientSessionId: fc.uuid(),
+      clientLat: latArb,
+      clientLng: lngArb,
+    })
+    .map(({ users, clientSessionId, clientLat, clientLng }) => {
+      // Ensure unique session IDs by appending index
+      const uniqueUsers = users.map((u, i) => ({
+        ...u,
+        sessionId: `${u.sessionId}-${i}`,
+      }));
+      return { users: uniqueUsers, clientSessionId, clientLat, clientLng };
+    });
+
+  it('filterNearbyUsers returns exactly the users who are visible, within 5000m, and not the client', () => {
+    fc.assert(
+      fc.property(scenarioArb, ({ users, clientSessionId, clientLat, clientLng }) => {
+        // Build the users Map as expected by filterNearbyUsers
+        const usersMap = new Map();
+        for (const u of users) {
+          usersMap.set(u.sessionId, {
+            displayName: u.displayName,
+            lat: u.lat,
+            lng: u.lng,
+            visible: u.visible,
+            lastSeen: u.lastSeen,
+          });
+        }
+
+        // Call the function under test
+        const result = filterNearbyUsers(usersMap, clientSessionId, clientLat, clientLng, RADIUS_M);
+
+        // Compute expected set independently
+        const expected = users.filter((u) => {
+          if (u.sessionId === clientSessionId) return false;
+          if (!u.visible) return false;
+          if (haversineDistance(clientLat, clientLng, u.lat, u.lng) > RADIUS_M) return false;
+          return true;
+        });
+
+        // Same number of results
+        expect(result.length).toBe(expected.length);
+
+        // Every expected user appears in the result
+        const resultIds = new Set(result.map((r) => r.sessionId));
+        for (const e of expected) {
+          expect(resultIds.has(e.sessionId)).toBe(true);
+        }
+
+        // Every result user was expected
+        const expectedIds = new Set(expected.map((e) => e.sessionId));
+        for (const r of result) {
+          expect(expectedIds.has(r.sessionId)).toBe(true);
+        }
+
+        // Verify returned objects have the correct shape: {sessionId, displayName, lat, lng}
+        for (const r of result) {
+          expect(r).toHaveProperty('sessionId');
+          expect(r).toHaveProperty('displayName');
+          expect(r).toHaveProperty('lat');
+          expect(r).toHaveProperty('lng');
+          expect(Object.keys(r).sort()).toEqual(['displayName', 'lat', 'lng', 'sessionId']);
+
+          // Verify values match the original user data
+          const originalUser = users.find((u) => u.sessionId === r.sessionId);
+          expect(r.displayName).toBe(originalUser.displayName);
+          expect(r.lat).toBe(originalUser.lat);
+          expect(r.lng).toBe(originalUser.lng);
+        }
       }),
       { numRuns: 100, verbose: true, endOnFailure: true }
     );

@@ -73,7 +73,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - Return array of `{sessionId, displayName, lat, lng}`
     - _Requirements: 4.4, 4.6, 5.6_
 
-  - [~] 2.7 Write property test: Presence update includes only visible users within radius
+  - [x] 2.7 Write property test: Presence update includes only visible users within radius
     - **Property 6: Presence update includes only visible users within radius**
     - Generate random user sets with positions and visibility states
     - Verify filtering correctness: visible AND within 5000m AND not self

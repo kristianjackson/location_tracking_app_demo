@@ -141,7 +141,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - Verify markers for users absent in new update are removed
     - **Validates: Requirements 5.1, 5.4, 5.5, 5.6, 6.4**
 
-  - [~] 4.6 Write property test: Marker tooltip contains display name
+  - [x] 4.6 Write property test: Marker tooltip contains display name
     - **Property 10: Marker tooltip contains display name**
     - Generate random display names
     - Verify the corresponding marker's tooltip content contains the display name string

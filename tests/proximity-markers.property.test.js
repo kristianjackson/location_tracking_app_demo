@@ -22,6 +22,9 @@ vi.mock('../map.js', () => ({
   }),
 }));
 
+// Import the mocked addNearbyUserMarker for call verification
+const { addNearbyUserMarker } = await import('../map.js');
+
 // Import proximity AFTER mocking map.js
 const {
   initProximity,
@@ -244,6 +247,160 @@ describe('Feature: multi-user-proximity, Property 9: Marker set matches presence
         const state = _getState();
         expect(state.nearbyMarkers.size).toBe(0);
       }),
+      { numRuns: 100, verbose: true, endOnFailure: true }
+    );
+  });
+});
+
+
+/**
+ * Feature: multi-user-proximity, Property 10: Marker tooltip contains display name
+ *
+ * **Validates: Requirements 5.3**
+ *
+ * For any nearby user with a display name, the corresponding marker's tooltip content
+ * SHALL contain that display name string.
+ */
+describe('Feature: multi-user-proximity, Property 10: Marker tooltip contains display name', () => {
+  // Our own session ID — must not appear in generated users
+  const ownSessionId = '00000000-0000-4000-a000-000000000000';
+  const ownDisplayName = 'TestSelf';
+
+  // Capture the WebSocket instance created during initProximity
+  let mockWs;
+  let originalWebSocket;
+
+  beforeEach(() => {
+    _resetState();
+    createdMarkers.clear();
+    markerIdCounter = 0;
+    localStorage.clear();
+    vi.clearAllMocks();
+
+    // Mock WebSocket so initProximity can connect
+    originalWebSocket = globalThis.WebSocket;
+    globalThis.WebSocket = class MockWebSocket {
+      static OPEN = 1;
+      static CLOSED = 3;
+
+      constructor(url) {
+        this.url = url;
+        this.readyState = MockWebSocket.OPEN;
+        this.onopen = null;
+        this.onmessage = null;
+        this.onclose = null;
+        this.onerror = null;
+        mockWs = this;
+
+        // Simulate async open
+        setTimeout(() => {
+          if (this.onopen) this.onopen({});
+        }, 0);
+      }
+
+      send() {}
+      close() {
+        this.readyState = MockWebSocket.CLOSED;
+      }
+    };
+    globalThis.WebSocket.OPEN = 1;
+    globalThis.WebSocket.CLOSED = 3;
+
+    const mockMap = {};
+    initProximity(mockMap, ownSessionId, ownDisplayName);
+  });
+
+  afterEach(() => {
+    _resetState();
+    globalThis.WebSocket = originalWebSocket;
+    createdMarkers.clear();
+    markerIdCounter = 0;
+  });
+
+  // --- Arbitraries ---
+
+  // Generate a unique session ID that is NOT our own
+  const sessionIdArb = fc.uuid().filter((id) => id !== ownSessionId);
+
+  // Display name: 2-20 chars, alphanumeric + space/hyphen/underscore
+  const allowedCharArb = fc.mapToConstant(
+    { num: 26, build: (v) => String.fromCharCode(0x41 + v) },
+    { num: 26, build: (v) => String.fromCharCode(0x61 + v) },
+    { num: 10, build: (v) => String.fromCharCode(0x30 + v) },
+    { num: 1, build: () => ' ' },
+    { num: 1, build: () => '_' },
+    { num: 1, build: () => '-' }
+  );
+  const displayNameArb = fc
+    .array(allowedCharArb, { minLength: 2, maxLength: 20 })
+    .map((chars) => chars.join(''));
+
+  const latArb = fc.double({ min: -90, max: 90, noNaN: true, noDefaultInfinity: true })
+    .map((v) => (Object.is(v, -0) ? 0 : v));
+  const lngArb = fc.double({ min: -180, max: 180, noNaN: true, noDefaultInfinity: true })
+    .map((v) => (Object.is(v, -0) ? 0 : v));
+
+  /**
+   * Helper: simulate receiving a presence update via the mock WebSocket
+   */
+  function simulatePresenceUpdate(users) {
+    const message = JSON.stringify({ type: 'presence', users });
+    if (mockWs && mockWs.onmessage) {
+      mockWs.onmessage({ data: message });
+    }
+  }
+
+  it('marker stored in nearbyMarkers contains the display name from the presence update', () => {
+    fc.assert(
+      fc.property(
+        sessionIdArb,
+        displayNameArb,
+        latArb,
+        lngArb,
+        (sessionId, displayName, lat, lng) => {
+          // Clear previous state
+          simulatePresenceUpdate([]);
+          vi.clearAllMocks();
+
+          // Send a presence update with a single user
+          simulatePresenceUpdate([{ sessionId, displayName, lat, lng }]);
+
+          // Verify the marker in nearbyMarkers has the correct displayName
+          const state = _getState();
+          const marker = state.nearbyMarkers.get(sessionId);
+          expect(marker).toBeDefined();
+          expect(marker.displayName).toBe(displayName);
+        }
+      ),
+      { numRuns: 100, verbose: true, endOnFailure: true }
+    );
+  });
+
+  it('addNearbyUserMarker is called with the display name as an argument', () => {
+    fc.assert(
+      fc.property(
+        sessionIdArb,
+        displayNameArb,
+        latArb,
+        lngArb,
+        (sessionId, displayName, lat, lng) => {
+          // Clear previous state
+          simulatePresenceUpdate([]);
+          vi.clearAllMocks();
+
+          // Send a presence update with a single user
+          simulatePresenceUpdate([{ sessionId, displayName, lat, lng }]);
+
+          // Verify addNearbyUserMarker was called with the display name
+          expect(addNearbyUserMarker).toHaveBeenCalledTimes(1);
+          expect(addNearbyUserMarker).toHaveBeenCalledWith(
+            expect.anything(), // map
+            lat,
+            lng,
+            displayName
+          );
+        }
+      ),
       { numRuns: 100, verbose: true, endOnFailure: true }
     );
   });

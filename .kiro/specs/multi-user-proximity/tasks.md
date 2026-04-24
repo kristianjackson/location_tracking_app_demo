@@ -211,7 +211,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - _Requirements: 2.7, 6.5_
 
 - [ ] 9. Wire proximity into the existing app (`app.js`)
-  - [-] 9.1 Integrate proximity modules into `app.js`
+  - [x] 9.1 Integrate proximity modules into `app.js`
     - Import `session.js`, `proximity.js`, and `proximity-ui.js`
     - After existing `handlePositionSuccess` initialization completes:
       1. Check for display name; call `showDisplayNamePrompt` if missing
@@ -225,7 +225,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - Ensure app continues to work if proximity service is unavailable (graceful degradation)
     - _Requirements: 1.2, 1.5, 1.6, 2.1, 3.1, 3.2, 3.7, 6.1, 6.2, 6.3, 6.4, 8.1, 8.2, 8.3_
 
-  - [~] 9.2 Write unit tests for app.js proximity integration
+  - [-] 9.2 Write unit tests for app.js proximity integration
     - Test proximity modules are loaded after existing init completes
     - Test display name prompt shown when no name exists
     - Test `sendLocationUpdate` called on each position update

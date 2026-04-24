@@ -49,7 +49,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - Export the function for direct unit testing
     - _Requirements: 4.6_
 
-  - [~] 2.3 Write property test: Haversine distance properties
+  - [x] 2.3 Write property test: Haversine distance properties
     - **Property 8: Haversine distance properties**
     - Generate random coordinate pairs with valid lat [-90, 90] and lng [-180, 180]
     - Verify non-negative, symmetric, zero-for-identical, and triangle inequality

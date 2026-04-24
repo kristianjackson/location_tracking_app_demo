@@ -236,8 +236,8 @@ This plan implements the multi-user proximity feature in incremental steps, star
 - [x] 10. Checkpoint
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 11. Integration tests
-  - [-] 11.1 Write integration tests for end-to-end proximity flows
+- [x] 11. Integration tests
+  - [x] 11.1 Write integration tests for end-to-end proximity flows
     - Test WebSocket connection establishment with valid session
     - Test location broadcast delivery and presence update receipt
     - Test hidden user exclusion from presence updates
@@ -246,7 +246,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - Test app operates in single-user mode when proximity service is unavailable
     - _Requirements: 3.1, 3.5, 4.3, 4.5, 8.1, 8.2_
 
-- [~] 12. Final checkpoint
+- [x] 12. Final checkpoint
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Notes

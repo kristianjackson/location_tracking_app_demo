@@ -7,6 +7,9 @@ import {
   addAccuracyCircle,
   updateAccuracyCircle,
   onUserPan,
+  addNearbyUserMarker,
+  updateNearbyUserMarker,
+  removeNearbyUserMarker,
 } from '../map.js';
 
 /**
@@ -19,6 +22,8 @@ function createMockLeaflet() {
   const mockCircleMarker = {
     addTo: vi.fn().mockReturnThis(),
     setLatLng: vi.fn(),
+    bindTooltip: vi.fn().mockReturnThis(),
+    remove: vi.fn(),
   };
   const mockCircle = {
     addTo: vi.fn().mockReturnThis(),
@@ -197,6 +202,66 @@ describe('map.js', () => {
       onUserPan(map, callback);
 
       expect(map.on).toHaveBeenCalledWith('dragend', callback);
+    });
+  });
+
+  // --- addNearbyUserMarker ---
+
+  describe('addNearbyUserMarker', () => {
+    it('creates a CircleMarker with green color (#34A853) and radius 8', () => {
+      const map = mockL._mockMap;
+      addNearbyUserMarker(map, 51.5, -0.1, 'Alice');
+
+      expect(mockL.circleMarker).toHaveBeenCalledWith(
+        [51.5, -0.1],
+        expect.objectContaining({
+          radius: 8,
+          color: '#34A853',
+        })
+      );
+    });
+
+    it('binds a tooltip with the display name', () => {
+      const map = mockL._mockMap;
+      addNearbyUserMarker(map, 51.5, -0.1, 'Bob');
+
+      expect(mockL._mockCircleMarker.bindTooltip).toHaveBeenCalledWith('Bob');
+    });
+
+    it('adds the marker to the map', () => {
+      const map = mockL._mockMap;
+      addNearbyUserMarker(map, 51.5, -0.1, 'Carol');
+
+      expect(mockL._mockCircleMarker.addTo).toHaveBeenCalledWith(map);
+    });
+
+    it('returns the CircleMarker instance', () => {
+      const map = mockL._mockMap;
+      const marker = addNearbyUserMarker(map, 51.5, -0.1, 'Dave');
+
+      expect(marker).toBe(mockL._mockCircleMarker);
+    });
+  });
+
+  // --- updateNearbyUserMarker ---
+
+  describe('updateNearbyUserMarker', () => {
+    it('moves the marker to new coordinates', () => {
+      const marker = mockL._mockCircleMarker;
+      updateNearbyUserMarker(marker, 40.7, -74.0);
+
+      expect(marker.setLatLng).toHaveBeenCalledWith([40.7, -74.0]);
+    });
+  });
+
+  // --- removeNearbyUserMarker ---
+
+  describe('removeNearbyUserMarker', () => {
+    it('removes the marker from the map', () => {
+      const marker = mockL._mockCircleMarker;
+      removeNearbyUserMarker(marker);
+
+      expect(marker.remove).toHaveBeenCalled();
     });
   });
 });

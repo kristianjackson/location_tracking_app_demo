@@ -165,7 +165,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - `removeNearbyUserMarker(marker)` — remove marker from map
     - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
 
-  - [~] 6.2 Write unit tests for nearby user marker functions
+  - [x] 6.2 Write unit tests for nearby user marker functions
     - Test marker created with correct color (#34A853) and radius (8)
     - Test tooltip is bound with display name
     - Test marker removal from map

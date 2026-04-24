@@ -23,14 +23,14 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - Install `fast-check` as a dev dependency
     - **Validates: Requirements 1.1**
 
-  - [-] 1.3 Write property test: Display name validation accepts only valid names
+  - [x] 1.3 Write property test: Display name validation accepts only valid names
     - **Property 2: Display name validation accepts only valid names**
     - Generate random strings of varying lengths and character sets
     - Verify `validateDisplayName` returns `valid=true` iff length is 2–20 and matches allowed characters
     - Verify `valid=false` results include a non-empty error message
     - **Validates: Requirements 1.3**
 
-  - [~] 1.4 Write unit tests for session module
+  - [x] 1.4 Write unit tests for session module
     - Test UUID reuse on subsequent calls to `getSessionId()`
     - Test `setDisplayName` throws on invalid input
     - Test `clearSession` removes all keys from localStorage
@@ -38,7 +38,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - _Requirements: 1.1, 1.3, 1.5_
 
 - [ ] 2. Implement server-side pure functions and Durable Object
-  - [~] 2.1 Scaffold the proximity service Worker project
+  - [-] 2.1 Scaffold the proximity service Worker project
     - Create `proximity-service/` directory with `src/index.js`, `src/proximity-room.js`, `wrangler.toml`, and `package.json`
     - Configure `wrangler.toml` with the Durable Object binding for `ProximityRoom`
     - _Requirements: 4.1, 4.7_

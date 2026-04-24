@@ -32,7 +32,7 @@ Build a lightweight, single-page web application that displays the user's real-t
     - Implement `hideSignalLost()` to remove signal-lost notification
     - Export all functions as ES module exports
     - _Requirements: 1.3, 1.4, 3.4, 6.1, 6.3_
-  - [ ] 2.2 Write unit tests for `ui.js`
+  - [x] 2.2 Write unit tests for `ui.js`
     - Test that `showLoading` creates and displays the loading element with correct text
     - Test that `hideLoading` removes the loading element
     - Test that `showError` displays the error message
@@ -138,7 +138,7 @@ Build a lightweight, single-page web application that displays the user's real-t
     - Confirm real-time updates move the marker
     - Confirm signal-lost notification appears after 30s without updates
     - _Requirements: 1.1, 1.2, 2.1, 2.2, 3.1, 3.2, 3.4, 4.1, 6.1, 6.3_
-  - [ ]* 8.2 Write integration tests for the full application flow
+  - [ ] 8.2 Write integration tests for the full application flow
     - Test initialization flow: loading → permission → map render
     - Test permission denied flow: loading → error message
     - Test real-time update flow: marker and accuracy circle update on new position

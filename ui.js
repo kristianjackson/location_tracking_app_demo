@@ -4,7 +4,9 @@
  * displayed in the #overlay container.
  */
 
-const overlay = document.getElementById('overlay');
+function getOverlay() {
+  return document.getElementById('overlay');
+}
 
 /**
  * Display a loading indicator with the provided message text.
@@ -18,14 +20,14 @@ export function showLoading(message) {
     <div class="spinner" role="status" aria-label="Loading"></div>
     <span class="loading-text">${message}</span>
   `;
-  overlay.appendChild(el);
+  getOverlay().appendChild(el);
 }
 
 /**
  * Remove the loading indicator from the overlay.
  */
 export function hideLoading() {
-  const el = overlay.querySelector('.loading-indicator');
+  const el = getOverlay().querySelector('.loading-indicator');
   if (el) {
     el.remove();
   }
@@ -44,14 +46,14 @@ export function showError(message) {
     <div class="error-icon" aria-hidden="true">⚠️</div>
     <p class="error-text">${message}</p>
   `;
-  overlay.appendChild(el);
+  getOverlay().appendChild(el);
 }
 
 /**
  * Remove the error message from the overlay.
  */
 export function hideError() {
-  const el = overlay.querySelector('.error-message');
+  const el = getOverlay().querySelector('.error-message');
   if (el) {
     el.remove();
   }
@@ -66,14 +68,14 @@ export function showSignalLost() {
   el.className = 'signal-lost';
   el.setAttribute('role', 'status');
   el.textContent = 'Location signal lost';
-  overlay.appendChild(el);
+  getOverlay().appendChild(el);
 }
 
 /**
  * Remove the signal-lost notification.
  */
 export function hideSignalLost() {
-  const el = overlay.querySelector('.signal-lost');
+  const el = getOverlay().querySelector('.signal-lost');
   if (el) {
     el.remove();
   }

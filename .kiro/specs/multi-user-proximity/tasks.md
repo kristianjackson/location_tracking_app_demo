@@ -173,7 +173,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - _Requirements: 5.2, 5.3_
 
 - [ ] 7. Implement proximity UI module (`proximity-ui.js`)
-  - [-] 7.1 Implement `proximity-ui.js` with all UI components
+  - [x] 7.1 Implement `proximity-ui.js` with all UI components
     - Create `proximity-ui.js` at the project root
     - Implement `showDisplayNamePrompt(onSubmit)` — modal overlay with input field, validation feedback, and submit button
     - Implement `createVisibilityToggle(container, onChange)` — toggle control defaulting to hidden, with distinct visible/hidden icons or colors
@@ -184,7 +184,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - Implement `createSettingsButton(container, onChangeName)` — settings gear for name change
     - _Requirements: 1.2, 1.4, 1.6, 2.1, 2.2, 2.7, 6.1, 6.2, 6.3, 6.4, 6.5, 7.5_
 
-  - [~] 7.2 Write unit tests for proximity UI module
+  - [-] 7.2 Write unit tests for proximity UI module
     - Test display name prompt appears and validates input
     - Test visibility toggle renders with correct initial state (hidden)
     - Test connection status indicator shows correct text for each state

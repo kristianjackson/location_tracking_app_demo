@@ -59,8 +59,8 @@ Build a lightweight, single-page web application that displays the user's real-t
 - [x] 4. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 5. Implement map view module (`map.js`)
-  - [ ] 5.1 Create `map.js` with Leaflet map management functions
+- [x] 5. Implement map view module (`map.js`)
+  - [x] 5.1 Create `map.js` with Leaflet map management functions
     - Implement `createMap(containerId)` to initialize a Leaflet map with OpenStreetMap tile layer
     - Implement `centerMap(map, lat, lng, zoom)` to set map view, default zoom level 16
     - Implement `addPositionMarker(map, lat, lng)` to add a `CircleMarker` with radius 8px and color `#4285F4`
@@ -70,7 +70,7 @@ Build a lightweight, single-page web application that displays the user's real-t
     - Implement `onUserPan(map, callback)` to detect user-initiated map panning via Leaflet `dragend` event
     - Export all functions as ES module exports
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 4.1, 4.2_
-  - [ ] 5.2 Write unit tests for `map.js`
+  - [x] 5.2 Write unit tests for `map.js`
     - Test `createMap` initializes a Leaflet map with OSM tile layer
     - Test `addPositionMarker` creates a CircleMarker at the given coordinates
     - Test `updatePositionMarker` moves the marker to new coordinates

@@ -43,7 +43,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - Configure `wrangler.toml` with the Durable Object binding for `ProximityRoom`
     - _Requirements: 4.1, 4.7_
 
-  - [-] 2.2 Implement `haversineDistance` pure function in `proximity-room.js`
+  - [x] 2.2 Implement `haversineDistance` pure function in `proximity-room.js`
     - Implement `haversineDistance(lat1, lon1, lat2, lon2)` returning distance in meters
     - Use Earth radius R = 6,371,000 meters
     - Export the function for direct unit testing

@@ -129,7 +129,7 @@ Build a lightweight, single-page web application that displays the user's real-t
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 8. Wire everything together and finalize
-  - [~] 8.1 Integrate all modules in `index.html` and verify end-to-end flow
+  - [x] 8.1 Integrate all modules in `index.html` and verify end-to-end flow
     - Ensure `index.html` correctly loads `app.js` as module entry point
     - Verify module imports chain: `app.js` → `map.js`, `geolocation.js`, `ui.js`
     - Confirm loading indicator appears on page load

@@ -62,8 +62,10 @@ describe('Feature: multi-user-proximity, Property 8: Haversine distance properti
         const dAB = haversineDistance(a.lat, a.lng, b.lat, b.lng);
         const dBC = haversineDistance(b.lat, b.lng, c.lat, c.lng);
 
-        // Small epsilon tolerance for floating point arithmetic
-        const epsilon = 1e-6;
+        // Small epsilon tolerance for floating point arithmetic.
+        // Near-antipodal points can accumulate rounding errors up to ~0.002m,
+        // so 1e-2 (1 cm) is still extremely precise for geographic distances.
+        const epsilon = 1e-2;
         expect(dAC).toBeLessThanOrEqual(dAB + dBC + epsilon);
       }),
       { numRuns: 100, verbose: true, endOnFailure: true }

@@ -37,7 +37,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - Test `getDisplayName` returns null when no name is stored
     - _Requirements: 1.1, 1.3, 1.5_
 
-- [ ] 2. Implement server-side pure functions and Durable Object
+- [x] 2. Implement server-side pure functions and Durable Object
   - [x] 2.1 Scaffold the proximity service Worker project
     - Create `proximity-service/` directory with `src/index.js`, `src/proximity-room.js`, `wrangler.toml`, and `package.json`
     - Configure `wrangler.toml` with the Durable Object binding for `ProximityRoom`
@@ -97,7 +97,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - Export the `ProximityRoom` class for the Durable Object binding
     - _Requirements: 4.1, 7.1_
 
-- [~] 3. Checkpoint
+- [x] 3. Checkpoint
   - Ensure all server-side tests pass, ask the user if questions arise.
 
 - [ ] 4. Implement client-side proximity modules

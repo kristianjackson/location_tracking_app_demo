@@ -121,14 +121,14 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - Verify `lat`, `lng`, `accuracy` present iff `visible` is true
     - **Validates: Requirements 2.3, 2.4, 3.2, 3.3, 3.4, 7.4**
 
-  - [-] 4.3 Write property test: Visibility preference round-trip
+  - [x] 4.3 Write property test: Visibility preference round-trip
     - **Property 4: Visibility preference round-trip**
     - Generate random boolean values
     - Verify `setVisibility` then `getVisibility` returns the original value
     - Verify the value is stored in localStorage
     - **Validates: Requirements 2.6**
 
-  - [~] 4.4 Write property test: Reconnect delay follows exponential backoff with cap
+  - [-] 4.4 Write property test: Reconnect delay follows exponential backoff with cap
     - **Property 5: Reconnect delay follows exponential backoff with cap**
     - Generate random non-negative integers for attempt number
     - Verify delay equals `min(1000 * 2^attempt, 30000)` and is within [1000, 30000]

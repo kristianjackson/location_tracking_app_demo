@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import fc from 'fast-check';
-import { buildLocationBroadcast } from '../proximity.js';
+import { buildLocationBroadcast, setVisibility, getVisibility, VISIBILITY_KEY, _resetState } from '../proximity.js';
 
 /**
  * Feature: multi-user-proximity, Property 3: LocationBroadcast structure matches visibility state
@@ -98,6 +98,52 @@ describe('Feature: multi-user-proximity, Property 3: LocationBroadcast structure
           expect(msg.accuracy).toBeUndefined();
         }
       ),
+      { numRuns: 100, verbose: true, endOnFailure: true }
+    );
+  });
+});
+
+
+/**
+ * Feature: multi-user-proximity, Property 4: Visibility preference round-trip
+ *
+ * **Validates: Requirements 2.6**
+ *
+ * For any boolean visibility value, storing it via `setVisibility` and then
+ * retrieving it via `getVisibility` SHALL return the original value. The value
+ * SHALL also be present in localStorage under the configured key.
+ */
+describe('Feature: multi-user-proximity, Property 4: Visibility preference round-trip', () => {
+  beforeEach(() => {
+    _resetState();
+    localStorage.clear();
+  });
+
+  it('setVisibility then getVisibility returns the original boolean value', () => {
+    fc.assert(
+      fc.property(fc.boolean(), (visible) => {
+        _resetState();
+        localStorage.clear();
+
+        setVisibility(visible);
+
+        expect(getVisibility()).toBe(visible);
+      }),
+      { numRuns: 100, verbose: true, endOnFailure: true }
+    );
+  });
+
+  it('setVisibility persists the value in localStorage under VISIBILITY_KEY', () => {
+    fc.assert(
+      fc.property(fc.boolean(), (visible) => {
+        _resetState();
+        localStorage.clear();
+
+        setVisibility(visible);
+
+        const stored = localStorage.getItem(VISIBILITY_KEY);
+        expect(stored).toBe(String(visible));
+      }),
       { numRuns: 100, verbose: true, endOnFailure: true }
     );
   });

@@ -61,7 +61,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - Return the list of evicted session IDs
     - _Requirements: 4.5_
 
-  - [~] 2.5 Write property test: Stale client eviction
+  - [x] 2.5 Write property test: Stale client eviction
     - **Property 7: Stale client eviction**
     - Generate random users with timestamps and a current time value
     - Verify a user is evicted iff `(currentTime - lastSeen) > 60000`

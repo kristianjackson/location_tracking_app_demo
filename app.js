@@ -1,11 +1,14 @@
 /**
  * Application Core Module
- * Orchestrates geolocation, map rendering, and UI state.
+ * Orchestrates geolocation, map rendering, UI state, and proximity features.
  */
 
 import { getCurrentPosition, watchPosition, clearWatch, getErrorMessage } from './geolocation.js';
 import { createMap, centerMap, addPositionMarker, updatePositionMarker, addAccuracyCircle, updateAccuracyCircle, onUserPan } from './map.js';
 import { showLoading, hideLoading, showError, hideError, showSignalLost, hideSignalLost } from './ui.js';
+import { getSessionId, getDisplayName, setDisplayName } from './session.js';
+import { initProximity, sendLocationUpdate, setVisibility, getVisibility, disconnect } from './proximity.js';
+import { showDisplayNamePrompt, createVisibilityToggle, setToggleState, showConnectionStatus, updateNearbyCount, showPrivacyNotice, createSettingsButton } from './proximity-ui.js';
 
 /** Time in ms before showing the signal-lost notification. */
 export const SIGNAL_LOST_TIMEOUT_MS = 30000;
@@ -19,6 +22,7 @@ export const state = {
   userHasPanned: false,
   signalLostTimerId: null,
   isInitialized: false,
+  proximityInitialized: false,
 };
 
 /**
@@ -39,7 +43,8 @@ export async function init() {
 
 /**
  * Handle a successful initial position retrieval.
- * Initializes the map, adds markers, hides loading, and starts watching.
+ * Initializes the map, adds markers, hides loading, starts watching,
+ * and initializes the proximity feature.
  * @param {GeolocationPosition} pos - The position from the Geolocation API.
  */
 export function handlePositionSuccess(pos) {
@@ -55,6 +60,68 @@ export function handlePositionSuccess(pos) {
   state.isInitialized = true;
 
   startWatching();
+
+  // Initialize proximity after existing init is complete
+  initProximityFeature();
+}
+
+/**
+ * Initialize the proximity feature.
+ * Checks for a display name and either prompts the user or starts proximity directly.
+ * Wrapped in try/catch for graceful degradation — the app continues in single-user mode
+ * if the proximity service is unavailable.
+ */
+export function initProximityFeature() {
+  try {
+    const sessionId = getSessionId();
+    const displayName = getDisplayName();
+
+    if (!displayName) {
+      showDisplayNamePrompt((name) => {
+        setDisplayName(name);
+        startProximity(state.map, sessionId, name);
+      });
+    } else {
+      startProximity(state.map, sessionId, displayName);
+    }
+  } catch (err) {
+    // Proximity feature failed to initialize — app continues in single-user mode
+    console.warn('Proximity feature initialization failed:', err);
+  }
+}
+
+/**
+ * Start the proximity connection and set up UI controls.
+ * @param {object} map - The Leaflet map instance.
+ * @param {string} sessionId - The user's session ID.
+ * @param {string} displayName - The user's display name.
+ */
+export function startProximity(map, sessionId, displayName) {
+  try {
+    const container = document.getElementById('proximity-controls');
+
+    initProximity(map, sessionId, displayName, {
+      onStatusChange: showConnectionStatus,
+      onNearbyCountChange: updateNearbyCount,
+    });
+
+    if (container) {
+      createVisibilityToggle(container, (visible) => {
+        setVisibility(visible);
+      });
+
+      setToggleState(getVisibility());
+
+      createSettingsButton(container, (newName) => {
+        setDisplayName(newName);
+      });
+    }
+
+    state.proximityInitialized = true;
+  } catch (err) {
+    // Proximity feature failed — app continues in single-user mode
+    console.warn('Proximity startup failed:', err);
+  }
 }
 
 /**
@@ -81,7 +148,8 @@ export function startWatching() {
 
 /**
  * Handle an incoming position update during continuous tracking.
- * Updates the marker, accuracy circle, re-centers if needed, and resets the signal-lost timer.
+ * Updates the marker, accuracy circle, re-centers if needed, resets the signal-lost timer,
+ * and sends a location update to the proximity service.
  * @param {GeolocationPosition} pos - The updated position.
  */
 export function onPositionUpdate(pos) {
@@ -95,6 +163,13 @@ export function onPositionUpdate(pos) {
   }
 
   resetSignalLostTimer();
+
+  // Send location update to proximity service (graceful degradation)
+  try {
+    sendLocationUpdate(latitude, longitude, accuracy);
+  } catch (err) {
+    // Proximity send failed — ignore silently, core tracking continues
+  }
 }
 
 /**

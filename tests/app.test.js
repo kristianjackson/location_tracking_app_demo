@@ -17,6 +17,9 @@ vi.mock('../map.js', () => ({
   addAccuracyCircle: vi.fn(),
   updateAccuracyCircle: vi.fn(),
   onUserPan: vi.fn(),
+  addNearbyUserMarker: vi.fn(),
+  updateNearbyUserMarker: vi.fn(),
+  removeNearbyUserMarker: vi.fn(),
 }));
 
 vi.mock('../ui.js', () => ({
@@ -28,6 +31,49 @@ vi.mock('../ui.js', () => ({
   hideSignalLost: vi.fn(),
 }));
 
+vi.mock('../session.js', () => ({
+  getSessionId: vi.fn(() => 'test-session-id'),
+  getDisplayName: vi.fn(() => 'TestUser'),
+  setDisplayName: vi.fn(),
+  validateDisplayName: vi.fn(() => ({ valid: true })),
+  SESSION_ID_KEY: 'proximity_session_id',
+  DISPLAY_NAME_KEY: 'proximity_display_name',
+  DISPLAY_NAME_MIN_LENGTH: 2,
+  DISPLAY_NAME_MAX_LENGTH: 20,
+  DISPLAY_NAME_PATTERN: /^[a-zA-Z0-9 _-]+$/,
+}));
+
+vi.mock('../proximity.js', () => ({
+  initProximity: vi.fn(),
+  sendLocationUpdate: vi.fn(),
+  setVisibility: vi.fn(),
+  getVisibility: vi.fn(() => false),
+  disconnect: vi.fn(),
+  VISIBILITY_KEY: 'proximity_visible',
+  WS_RECONNECT_BASE_MS: 1000,
+  WS_RECONNECT_MAX_MS: 30000,
+  NEARBY_MARKER_COLOR: '#34A853',
+  NEARBY_MARKER_RADIUS: 8,
+  computeReconnectDelay: vi.fn(),
+  buildLocationBroadcast: vi.fn(),
+  getNearbyUserCount: vi.fn(() => 0),
+  setOnStatusChange: vi.fn(),
+  setOnNearbyCountChange: vi.fn(),
+  _getState: vi.fn(),
+  _resetState: vi.fn(),
+  PROXIMITY_SERVICE_URL: 'wss://proximity-service.example.com',
+}));
+
+vi.mock('../proximity-ui.js', () => ({
+  showDisplayNamePrompt: vi.fn(),
+  createVisibilityToggle: vi.fn(),
+  setToggleState: vi.fn(),
+  showConnectionStatus: vi.fn(),
+  updateNearbyCount: vi.fn(),
+  showPrivacyNotice: vi.fn(),
+  createSettingsButton: vi.fn(),
+}));
+
 import {
   init,
   handlePositionSuccess,
@@ -35,6 +81,8 @@ import {
   onPositionUpdate,
   resetSignalLostTimer,
   startWatching,
+  startProximity,
+  initProximityFeature,
   state,
   SIGNAL_LOST_TIMEOUT_MS,
 } from '../app.js';
@@ -42,6 +90,9 @@ import {
 import { getCurrentPosition, watchPosition, getErrorMessage } from '../geolocation.js';
 import { createMap, centerMap, addPositionMarker, updatePositionMarker, addAccuracyCircle, updateAccuracyCircle, onUserPan } from '../map.js';
 import { showLoading, hideLoading, showError, showSignalLost, hideSignalLost } from '../ui.js';
+import { getSessionId, getDisplayName, setDisplayName } from '../session.js';
+import { initProximity, sendLocationUpdate, setVisibility, getVisibility } from '../proximity.js';
+import { showDisplayNamePrompt, createVisibilityToggle, setToggleState, showConnectionStatus, updateNearbyCount, createSettingsButton } from '../proximity-ui.js';
 
 /**
  * Helper: build a fake GeolocationPosition-like object.
@@ -82,6 +133,7 @@ describe('app.js', () => {
     state.userHasPanned = false;
     state.signalLostTimerId = null;
     state.isInitialized = false;
+    state.proximityInitialized = false;
 
     // Reset all mocks
     vi.clearAllMocks();
@@ -91,6 +143,16 @@ describe('app.js', () => {
     addPositionMarker.mockReturnValue(mockMarker);
     addAccuracyCircle.mockReturnValue(mockCircle);
     watchPosition.mockReturnValue(7);
+    getSessionId.mockReturnValue('test-session-id');
+    getDisplayName.mockReturnValue('TestUser');
+    getVisibility.mockReturnValue(false);
+
+    // Ensure proximity-controls container exists in DOM
+    if (!document.getElementById('proximity-controls')) {
+      const container = document.createElement('div');
+      container.id = 'proximity-controls';
+      document.body.appendChild(container);
+    }
   });
 
   afterEach(() => {
@@ -99,6 +161,10 @@ describe('app.js', () => {
       clearTimeout(state.signalLostTimerId);
       state.signalLostTimerId = null;
     }
+
+    // Clean up DOM
+    const container = document.getElementById('proximity-controls');
+    if (container) container.innerHTML = '';
   });
 
   // --- init ---
@@ -194,6 +260,17 @@ describe('app.js', () => {
         expect.any(Function)
       );
       expect(onUserPan).toHaveBeenCalledWith(mockMap, expect.any(Function));
+    });
+
+    it('initializes the proximity feature after existing init', () => {
+      const pos = fakePosition();
+
+      handlePositionSuccess(pos);
+
+      // Proximity should be initialized after map setup
+      expect(getSessionId).toHaveBeenCalled();
+      expect(getDisplayName).toHaveBeenCalled();
+      expect(initProximity).toHaveBeenCalled();
     });
   });
 
@@ -299,6 +376,25 @@ describe('app.js', () => {
       // resetSignalLostTimer hides signal-lost and sets a new timer
       expect(hideSignalLost).toHaveBeenCalled();
     });
+
+    it('sends location update to proximity service', () => {
+      const pos = fakePosition(40.7, -74.0, 20);
+
+      onPositionUpdate(pos);
+
+      expect(sendLocationUpdate).toHaveBeenCalledWith(40.7, -74.0, 20);
+    });
+
+    it('continues working if sendLocationUpdate throws', () => {
+      sendLocationUpdate.mockImplementation(() => { throw new Error('WS not connected'); });
+      const pos = fakePosition(40.7, -74.0, 20);
+
+      // Should not throw
+      expect(() => onPositionUpdate(pos)).not.toThrow();
+
+      // Core tracking still works
+      expect(updatePositionMarker).toHaveBeenCalledWith(mockMarker, 40.7, -74.0);
+    });
   });
 
   // --- resetSignalLostTimer ---
@@ -350,6 +446,132 @@ describe('app.js', () => {
   describe('SIGNAL_LOST_TIMEOUT_MS', () => {
     it('is 30000 milliseconds', () => {
       expect(SIGNAL_LOST_TIMEOUT_MS).toBe(30000);
+    });
+  });
+
+  // --- Proximity integration ---
+
+  describe('proximity integration', () => {
+    it('prompts for display name when none exists', () => {
+      getDisplayName.mockReturnValue(null);
+
+      initProximityFeature();
+
+      expect(showDisplayNamePrompt).toHaveBeenCalledWith(expect.any(Function));
+      // initProximity should NOT be called yet (waiting for name)
+      expect(initProximity).not.toHaveBeenCalled();
+    });
+
+    it('starts proximity directly when display name exists', () => {
+      getDisplayName.mockReturnValue('Alice');
+      state.map = mockMap;
+
+      initProximityFeature();
+
+      expect(initProximity).toHaveBeenCalledWith(
+        mockMap,
+        'test-session-id',
+        'Alice',
+        expect.objectContaining({
+          onStatusChange: showConnectionStatus,
+          onNearbyCountChange: updateNearbyCount,
+        })
+      );
+    });
+
+    it('calls setDisplayName and startProximity when name is submitted via prompt', () => {
+      getDisplayName.mockReturnValue(null);
+      state.map = mockMap;
+
+      initProximityFeature();
+
+      // Get the callback passed to showDisplayNamePrompt
+      const onSubmit = showDisplayNamePrompt.mock.calls[0][0];
+      onSubmit('NewUser');
+
+      expect(setDisplayName).toHaveBeenCalledWith('NewUser');
+      expect(initProximity).toHaveBeenCalledWith(
+        mockMap,
+        'test-session-id',
+        'NewUser',
+        expect.objectContaining({
+          onStatusChange: showConnectionStatus,
+          onNearbyCountChange: updateNearbyCount,
+        })
+      );
+    });
+
+    it('creates visibility toggle and settings button', () => {
+      state.map = mockMap;
+
+      startProximity(mockMap, 'test-session-id', 'TestUser');
+
+      expect(createVisibilityToggle).toHaveBeenCalledWith(
+        expect.any(HTMLElement),
+        expect.any(Function)
+      );
+      expect(createSettingsButton).toHaveBeenCalledWith(
+        expect.any(HTMLElement),
+        expect.any(Function)
+      );
+    });
+
+    it('restores visibility toggle state from saved preference', () => {
+      getVisibility.mockReturnValue(true);
+      state.map = mockMap;
+
+      startProximity(mockMap, 'test-session-id', 'TestUser');
+
+      expect(setToggleState).toHaveBeenCalledWith(true);
+    });
+
+    it('wires visibility toggle onChange to setVisibility', () => {
+      state.map = mockMap;
+
+      startProximity(mockMap, 'test-session-id', 'TestUser');
+
+      const onChange = createVisibilityToggle.mock.calls[0][1];
+      onChange(true);
+
+      expect(setVisibility).toHaveBeenCalledWith(true);
+    });
+
+    it('wires settings button to setDisplayName', () => {
+      state.map = mockMap;
+
+      startProximity(mockMap, 'test-session-id', 'TestUser');
+
+      const onChangeName = createSettingsButton.mock.calls[0][1];
+      onChangeName('NewName');
+
+      expect(setDisplayName).toHaveBeenCalledWith('NewName');
+    });
+
+    it('continues working if proximity initialization throws', () => {
+      getSessionId.mockImplementation(() => { throw new Error('localStorage unavailable'); });
+
+      // Should not throw
+      expect(() => initProximityFeature()).not.toThrow();
+
+      // initProximity should not have been called
+      expect(initProximity).not.toHaveBeenCalled();
+    });
+
+    it('continues working if startProximity throws', () => {
+      initProximity.mockImplementation(() => { throw new Error('WebSocket failed'); });
+      state.map = mockMap;
+
+      // Should not throw
+      expect(() => startProximity(mockMap, 'test-session-id', 'TestUser')).not.toThrow();
+    });
+
+    it('sets proximityInitialized to true on successful start', () => {
+      initProximity.mockImplementation(() => {}); // Reset to non-throwing
+      state.map = mockMap;
+
+      startProximity(mockMap, 'test-session-id', 'TestUser');
+
+      expect(state.proximityInitialized).toBe(true);
     });
   });
 });

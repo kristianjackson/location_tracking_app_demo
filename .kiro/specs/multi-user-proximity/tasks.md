@@ -192,7 +192,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - Test privacy notice modal displays and dismisses
     - _Requirements: 1.2, 1.4, 2.1, 2.2, 2.7, 6.1, 6.2, 6.3, 6.4_
 
-- [ ] 8. Update `index.html` and `styles.css` for proximity UI
+- [x] 8. Update `index.html` and `styles.css` for proximity UI
   - [x] 8.1 Add proximity UI containers to `index.html`
     - Add container for visibility toggle (positioned on map, e.g., top-right)
     - Add container for connection status indicator
@@ -200,7 +200,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - Ensure containers do not obstruct the map or existing overlay
     - _Requirements: 2.1, 6.1, 6.2, 6.3, 6.4, 6.5_
 
-  - [-] 8.2 Add proximity styles to `styles.css`
+  - [x] 8.2 Add proximity styles to `styles.css`
     - Style the visibility toggle with distinct visible/hidden states
     - Style the connection status indicator (subtle, non-obstructive)
     - Style the nearby count badge
@@ -211,7 +211,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - _Requirements: 2.7, 6.5_
 
 - [ ] 9. Wire proximity into the existing app (`app.js`)
-  - [~] 9.1 Integrate proximity modules into `app.js`
+  - [-] 9.1 Integrate proximity modules into `app.js`
     - Import `session.js`, `proximity.js`, and `proximity-ui.js`
     - After existing `handlePositionSuccess` initialization completes:
       1. Check for display name; call `showDisplayNamePrompt` if missing

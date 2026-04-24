@@ -43,7 +43,18 @@ export async function init() {
  * @param {GeolocationPosition} pos - The position from the Geolocation API.
  */
 export function handlePositionSuccess(pos) {
-  // TODO: Implement in task 6.2
+  const { latitude, longitude, accuracy } = pos.coords;
+
+  state.map = createMap('map');
+  centerMap(state.map, latitude, longitude, 16);
+
+  state.marker = addPositionMarker(state.map, latitude, longitude);
+  state.accuracyCircle = addAccuracyCircle(state.map, latitude, longitude, accuracy);
+
+  hideLoading();
+  state.isInitialized = true;
+
+  startWatching();
 }
 
 /**
@@ -59,7 +70,11 @@ export function handlePositionError(err) {
  * Subscribe to continuous position updates from the Geolocation API.
  */
 export function startWatching() {
-  // TODO: Implement in task 6.2
+  state.watchId = watchPosition(onPositionUpdate, handlePositionError);
+
+  onUserPan(state.map, () => {
+    state.userHasPanned = true;
+  });
 }
 
 /**
@@ -68,7 +83,16 @@ export function startWatching() {
  * @param {GeolocationPosition} pos - The updated position.
  */
 export function onPositionUpdate(pos) {
-  // TODO: Implement in task 6.2
+  const { latitude, longitude, accuracy } = pos.coords;
+
+  updatePositionMarker(state.marker, latitude, longitude);
+  updateAccuracyCircle(state.accuracyCircle, latitude, longitude, accuracy);
+
+  if (!state.userHasPanned) {
+    centerMap(state.map, latitude, longitude);
+  }
+
+  resetSignalLostTimer();
 }
 
 /**

@@ -233,11 +233,11 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - Test visibility toggle wired correctly
     - _Requirements: 8.1, 8.2, 8.3_
 
-- [-] 10. Checkpoint
+- [x] 10. Checkpoint
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 11. Integration tests
-  - [~] 11.1 Write integration tests for end-to-end proximity flows
+  - [-] 11.1 Write integration tests for end-to-end proximity flows
     - Test WebSocket connection establishment with valid session
     - Test location broadcast delivery and presence update receipt
     - Test hidden user exclusion from presence updates

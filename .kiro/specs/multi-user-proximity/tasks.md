@@ -158,7 +158,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
 - [x] 5. Checkpoint
   - Ensure all client-side proximity tests pass, ask the user if questions arise.
 
-- [ ] 6. Add nearby user marker functions to `map.js`
+- [x] 6. Add nearby user marker functions to `map.js`
   - [x] 6.1 Implement `addNearbyUserMarker`, `updateNearbyUserMarker`, `removeNearbyUserMarker` in `map.js`
     - `addNearbyUserMarker(map, lat, lng, displayName)` — create green (#34A853) CircleMarker with radius 8, bind tooltip with display name, add to map, return marker
     - `updateNearbyUserMarker(marker, lat, lng)` — call `setLatLng` on existing marker
@@ -173,7 +173,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - _Requirements: 5.2, 5.3_
 
 - [ ] 7. Implement proximity UI module (`proximity-ui.js`)
-  - [~] 7.1 Implement `proximity-ui.js` with all UI components
+  - [-] 7.1 Implement `proximity-ui.js` with all UI components
     - Create `proximity-ui.js` at the project root
     - Implement `showDisplayNamePrompt(onSubmit)` — modal overlay with input field, validation feedback, and submit button
     - Implement `createVisibilityToggle(container, onChange)` — toggle control defaulting to hidden, with distinct visible/hidden icons or colors

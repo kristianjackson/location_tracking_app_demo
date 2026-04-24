@@ -89,7 +89,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - Export constants: `PROXIMITY_RADIUS_M`, `BROADCAST_INTERVAL_MS`, `STALE_TIMEOUT_MS`
     - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.7, 7.2, 7.3_
 
-  - [~] 2.9 Implement the Worker entry point (`index.js`)
+  - [x] 2.9 Implement the Worker entry point (`index.js`)
     - Handle CORS preflight requests
     - Validate WebSocket upgrade header; return 426 if missing
     - Extract `sessionId` and `displayName` from query params; return 400 if missing/invalid

@@ -1,6 +1,15 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import fc from 'fast-check';
-import { buildLocationBroadcast, setVisibility, getVisibility, VISIBILITY_KEY, _resetState } from '../proximity.js';
+import {
+  buildLocationBroadcast,
+  setVisibility,
+  getVisibility,
+  VISIBILITY_KEY,
+  _resetState,
+  computeReconnectDelay,
+  WS_RECONNECT_BASE_MS,
+  WS_RECONNECT_MAX_MS,
+} from '../proximity.js';
 
 /**
  * Feature: multi-user-proximity, Property 3: LocationBroadcast structure matches visibility state
@@ -143,6 +152,55 @@ describe('Feature: multi-user-proximity, Property 4: Visibility preference round
 
         const stored = localStorage.getItem(VISIBILITY_KEY);
         expect(stored).toBe(String(visible));
+      }),
+      { numRuns: 100, verbose: true, endOnFailure: true }
+    );
+  });
+});
+
+
+/**
+ * Feature: multi-user-proximity, Property 5: Reconnect delay follows exponential backoff with cap
+ *
+ * **Validates: Requirements 3.5**
+ *
+ * For any non-negative integer attempt number, the computed reconnect delay SHALL equal
+ * `min(1000 * 2^attempt, 30000)` milliseconds. The delay SHALL never be less than 1000 ms
+ * or greater than 30000 ms.
+ */
+describe('Feature: multi-user-proximity, Property 5: Reconnect delay follows exponential backoff with cap', () => {
+  // Arbitrary for non-negative attempt numbers (0 to 100)
+  const attemptArb = fc.integer({ min: 0, max: 100 });
+
+  it('delay equals min(1000 * 2^attempt, 30000) for any attempt number', () => {
+    fc.assert(
+      fc.property(attemptArb, (attempt) => {
+        const delay = computeReconnectDelay(attempt);
+        const expected = Math.min(WS_RECONNECT_BASE_MS * Math.pow(2, attempt), WS_RECONNECT_MAX_MS);
+
+        expect(delay).toBe(expected);
+      }),
+      { numRuns: 100, verbose: true, endOnFailure: true }
+    );
+  });
+
+  it('delay is always >= WS_RECONNECT_BASE_MS (1000 ms)', () => {
+    fc.assert(
+      fc.property(attemptArb, (attempt) => {
+        const delay = computeReconnectDelay(attempt);
+
+        expect(delay).toBeGreaterThanOrEqual(WS_RECONNECT_BASE_MS);
+      }),
+      { numRuns: 100, verbose: true, endOnFailure: true }
+    );
+  });
+
+  it('delay is always <= WS_RECONNECT_MAX_MS (30000 ms)', () => {
+    fc.assert(
+      fc.property(attemptArb, (attempt) => {
+        const delay = computeReconnectDelay(attempt);
+
+        expect(delay).toBeLessThanOrEqual(WS_RECONNECT_MAX_MS);
       }),
       { numRuns: 100, verbose: true, endOnFailure: true }
     );

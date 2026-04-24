@@ -128,7 +128,7 @@ This plan implements the multi-user proximity feature in incremental steps, star
     - Verify the value is stored in localStorage
     - **Validates: Requirements 2.6**
 
-  - [-] 4.4 Write property test: Reconnect delay follows exponential backoff with cap
+  - [x] 4.4 Write property test: Reconnect delay follows exponential backoff with cap
     - **Property 5: Reconnect delay follows exponential backoff with cap**
     - Generate random non-negative integers for attempt number
     - Verify delay equals `min(1000 * 2^attempt, 30000)` and is within [1000, 30000]

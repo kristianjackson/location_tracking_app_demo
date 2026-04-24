@@ -116,7 +116,7 @@ Build a lightweight, single-page web application that displays the user's real-t
       - Clear geolocation watch
       - Clear signal-lost timer
     - _Requirements: 1.3, 1.4, 3.4_
-  - [~] 6.4 Write unit tests for `app.js`
+  - [x] 6.4 Write unit tests for `app.js`
     - Test `init` shows loading indicator and requests position
     - Test `handlePositionSuccess` initializes map, adds marker, hides loading, starts watching
     - Test `handlePositionError` shows correct error message for each error code

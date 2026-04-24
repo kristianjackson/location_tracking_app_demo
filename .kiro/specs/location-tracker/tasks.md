@@ -103,7 +103,7 @@ Build a lightweight, single-page web application that displays the user's real-t
       - Re-center map if `userHasPanned` is false
       - Call `resetSignalLostTimer()`
     - _Requirements: 2.1, 2.2, 2.3, 3.1, 3.2, 3.3, 4.1, 4.2, 6.3_
-  - [~] 6.3 Implement error handling and signal-lost timer
+  - [x] 6.3 Implement error handling and signal-lost timer
     - Implement `handlePositionError(err)`:
       - Hide loading indicator
       - Get user-facing message from `getErrorMessage`

@@ -63,7 +63,9 @@ export function handlePositionSuccess(pos) {
  * @param {GeolocationPositionError} err - The error from the Geolocation API.
  */
 export function handlePositionError(err) {
-  // TODO: Implement in task 6.3
+  hideLoading();
+  const message = getErrorMessage(err);
+  showError(message);
 }
 
 /**
@@ -100,14 +102,31 @@ export function onPositionUpdate(pos) {
  * If no update arrives within SIGNAL_LOST_TIMEOUT_MS, shows the signal-lost notification.
  */
 export function resetSignalLostTimer() {
-  // TODO: Implement in task 6.3
+  if (state.signalLostTimerId !== null) {
+    clearTimeout(state.signalLostTimerId);
+    state.signalLostTimerId = null;
+  }
+
+  hideSignalLost();
+
+  state.signalLostTimerId = setTimeout(() => {
+    showSignalLost();
+  }, SIGNAL_LOST_TIMEOUT_MS);
 }
 
 /**
  * Stop watching for position updates and clear the signal-lost timer.
  */
 export function stopWatching() {
-  // TODO: Implement in task 6.3
+  if (state.watchId !== null) {
+    clearWatch(state.watchId);
+    state.watchId = null;
+  }
+
+  if (state.signalLostTimerId !== null) {
+    clearTimeout(state.signalLostTimerId);
+    state.signalLostTimerId = null;
+  }
 }
 
 // Start the app when the DOM is ready.
